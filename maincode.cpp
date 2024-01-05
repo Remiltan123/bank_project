@@ -277,4 +277,77 @@ void Customer::deposit_Money_Function(Bank& bank,ofstream& MyFile,ofstream& Bank
     }
 }
 
+void Customer::set_Date(Administrator & Admin)
+{
+    this -> dateToday = Admin.get_Date();
+};
+
+void Customer::withdraw_Money(Bank& bank,ofstream& MyFile,ofstream& BankFile)
+{
+    int moneyToWithdraw;
+    cout << "ENTER THE AMOUNT OF MONEY TO WITHDRAW: ";
+    cin >> moneyToWithdraw;
+    if (this -> isCurrentAccount == false && moneyToWithdraw > this -> moneyDeposit)
+    {
+        cout << "SORRY INSUFFICIENT BALANCE" << endl;
+    }
+    else if (this -> isCurrentAccount == false && moneyToWithdraw <= this -> moneyDeposit)
+    {
+        this -> moneyDeposit -= moneyToWithdraw;
+        cout << "SUCESSFULL WITHDRAWAL" << endl;
+        MyFile<<this->dateToday<<" - "<<this->CustomerName<<" : WITHDRAWN "<<to_string(moneyToWithdraw)<<endl;
+        Transaction transaction_now_1;
+        transaction_now_1.setTransactionDate(this->dateToday);
+        transaction_now_1.setDescription(this->CustomerName,"MONEY WITHDRAWN FROM CUSTOMER ACCOUNT",moneyToWithdraw);
+        this->transactions.push_back(transaction_now_1);
+    }
+    else if (this -> isCurrentAccount == true && moneyToWithdraw > this -> moneyDeposit)
+    {
+        if (((this -> moneyDeposit - moneyToWithdraw) * (-1)) <= this -> overdraftMaximum && ((this -> moneyDeposit - moneyToWithdraw) * (-1)) <= bank.bankBalance )
+        {
+            this -> overDraftNow = moneyToWithdraw - (this -> moneyDeposit);
+            bank.bankBalance-=this->overDraftNow;
+            this -> moneyDeposit -= moneyToWithdraw;
+            cout << "SUCESSFULL WITHDRAWAL" << endl;
+            BankFile<<this->dateToday<<" - "<<this->CustomerName<<" : OVERDRAFT DEBITED TO BANK ACCOUNT : "<<to_string(this->overDraftNow)<<" Rs."<<endl;
+            BankFile<<this->dateToday<<" - "<<"BANK BALANCE : "<<bank.bankBalance<<endl;
+            MyFile<<this->dateToday<<" - "<<this->CustomerName<<" : WITHDRAWN "<<to_string(moneyToWithdraw)<<endl;
+            Transaction transaction_now_2;
+            Transaction transaction_now_3;
+            transaction_now_2.setTransactionDate(this->dateToday);
+            transaction_now_3.setTransactionDate(this->dateToday);
+            transaction_now_2.setDescription(this->CustomerName,"MONEY WITHDRAWN FROM CUSTOMER ACCOUNT",moneyToWithdraw);
+            transaction_now_3.setDescription(this->CustomerName,"OVERDRAFT DEBITED TO BANK ACCOUNT",this->overDraftNow);
+            this->transactions.push_back(transaction_now_2);
+            bank.transactions.push_back(transaction_now_3);
+        }
+        else if(((this -> moneyDeposit - moneyToWithdraw) * (-1)) <= this -> overdraftMaximum && ((this -> moneyDeposit - moneyToWithdraw) * (-1)) > bank.bankBalance)
+        {
+            cout << "CAN'T WITHDRAW AMOUNT GREATER THAN BALANCE IN THE BANK.";
+        }
+        else
+        {
+            cout << "CAN'T WITHDRAW AMOUNT GREATER THAN MAXIMUM OVERDRAFT.";
+        }
+    }
+    else if (this -> isCurrentAccount == true && moneyToWithdraw <= this -> moneyDeposit)
+    {
+        this -> moneyDeposit -= moneyToWithdraw;
+        cout << "SUCESSFULL WITHDRAWAL" << endl;
+        MyFile<<this->dateToday<<" - "<<this->CustomerName<<" : WITHDRAWN "<<to_string(moneyToWithdraw)<<endl;
+        Transaction transaction_now_4;
+        transaction_now_4.setTransactionDate(this->dateToday);
+        transaction_now_4.setDescription(this->CustomerName,"MONEY WITHDRAWN FROM CUSTOMER ACCOUNT",moneyToWithdraw);
+        this->transactions.push_back(transaction_now_4);
+    }
+    for(int i=0; i<=bank.customerNameArray.size(); i++)
+    {
+        if(this->CustomerName==bank.customerNameArray[i])
+        {
+            bank.customerArray[i].moneyDeposit=this->moneyDeposit;
+            bank.customerArray[i].overDraftNow=this->overDraftNow;
+        }
+    }
+
+};
 
