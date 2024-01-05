@@ -223,3 +223,58 @@ float Administrator::get_overdraftCharge()
 {
     return (this->overdraftCharge);
 };
+
+void Customer::view_Transaction()
+{
+    int numberOfTransactions=this->transactions.size();
+    for(int i=0; i<numberOfTransactions; i++)
+    {
+        cout<<this->transactions[i].getDescription()<<endl;
+    }
+};
+
+void Customer::deposit_Money_Function(Bank& bank,ofstream& MyFile,ofstream& BankFile)
+{
+    int moneyAdded;
+    cout << "ENTER THE AMOUNT OF MONEY TO DEPOSIT: ";
+    cin >> moneyAdded;
+    this -> moneyDeposit += moneyAdded;
+    MyFile<<this->dateToday<<" - "<<this->CustomerName<<" : DEPOSITED "<<to_string(moneyAdded)<<endl;
+    Transaction transaction_now_1;
+    transaction_now_1.setTransactionDate(this->dateToday);
+    transaction_now_1.setDescription(this->CustomerName,"MONEY CREDITED TO CUSTOMER ACCOUNT",moneyAdded);
+    this->transactions.push_back(transaction_now_1);
+
+    if (this -> moneyDeposit >= 0)
+    {
+        bank.bankBalance+=overDraftNow;
+        BankFile<<this->dateToday<<" - "<<this->CustomerName<<" : OVERDRAFT CREDITED TO BANK ACCOUNT : "<<to_string(overDraftNow)<<" Rs."<<endl;
+        BankFile<<this->dateToday<<" - "<<"BANK BALANCE : "<<bank.bankBalance<<endl;
+        Transaction transaction_now_2;
+        transaction_now_2.setTransactionDate(this->dateToday);
+        transaction_now_2.setDescription(this->CustomerName,"OVERDRAFT CREDITED TO BANK ACCOUNT",overDraftNow);
+        bank.transactions.push_back(transaction_now_2);
+        this -> overDraftNow = 0;
+    }
+    else
+    {
+        bank.bankBalance+=moneyAdded;
+        BankFile<<this->dateToday<<" - "<<this->CustomerName<<" : OVERDRAFT CREDITED TO BANK ACCOUNT : "<<to_string(moneyAdded)<<" Rs."<<endl;
+        BankFile<<this->dateToday<<" - "<<"BANK BALANCE : "<<bank.bankBalance<<endl;
+        this -> overDraftNow -= moneyAdded;
+        Transaction transaction_now_2;
+        transaction_now_2.setTransactionDate(this->dateToday);
+        transaction_now_2.setDescription(this->CustomerName,"OVERDRAFT CREDITED TO BANK ACCOUNT",moneyAdded);
+        bank.transactions.push_back(transaction_now_2);
+    }
+    for(int i=0; i<=bank.customerNameArray.size(); i++)
+    {
+        if(this->CustomerName==bank.customerNameArray[i])
+        {
+            bank.customerArray[i].moneyDeposit=this->moneyDeposit;
+            bank.customerArray[i].overDraftNow=this->overDraftNow;
+        }
+    }
+}
+
+
