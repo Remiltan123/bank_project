@@ -86,6 +86,28 @@ public:
     void withdraw_Money(Bank& bank,ofstream& MyFile,ofstream& BankFile);
 };
 
+class Transaction
+{
+private:
+    string dateToday;
+    string description;
+public:
+
+    void setTransactionDate(string dateToday)
+    {
+        this->dateToday=dateToday;
+    }
+
+    void setDescription(string customer_name,string debitOrCredit,long amount)
+    {
+        this->description=this->dateToday+" - "+customer_name+" : "+debitOrCredit+" : "+to_string(amount)+" Rs.";
+    }
+    string getDescription()
+    {
+        return this->description;
+    }
+
+};
 
 int Administrator::employee_Number(Bank& bank)
 {
@@ -329,3 +351,44 @@ void Customer::withdraw_Money(Bank& bank,ofstream& MyFile,ofstream& BankFile)
 
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+int main()
+{
+    Bank bank;
+    vector<string> employeeNameArray;
+    vector<string> customerNameArray;
+
+    ofstream BankFile("Bank.txt");
+    ofstream CustomerFile("Customer_details.txt");
+    fstream BankFile_handler;
+    fstream CustomerFile_handler;
+
+    BankFile_handler.open("Bank.txt", ios:: in | ios::out);
+    CustomerFile_handler.open("Customer_details.txt", ios:: in | ios::out);
+
+    if (!BankFile_handler)
+    {
+        cout << "BANK FILE DID NOT OPEN!";
+        exit(1);
+    }
+
+    if (!CustomerFile_handler)
+    {
+        cout << "CUSTOMER DETAILS FILE DID NOT OPEN!";
+        exit(1);
+    }
+
+    
+    return 0;
+}
