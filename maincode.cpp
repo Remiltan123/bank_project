@@ -86,28 +86,6 @@ public:
     void withdraw_Money(Bank& bank,ofstream& MyFile,ofstream& BankFile);
 };
 
-class Transaction
-{
-private:
-    string dateToday;
-    string description;
-public:
-
-    void setTransactionDate(string dateToday)
-    {
-        this->dateToday=dateToday;
-    }
-
-    void setDescription(string customer_name,string debitOrCredit,long amount)
-    {
-        this->description=this->dateToday+" - "+customer_name+" : "+debitOrCredit+" : "+to_string(amount)+" Rs.";
-    }
-    string getDescription()
-    {
-        return this->description;
-    }
-
-};
 
 int Administrator::employee_Number(Bank& bank)
 {
