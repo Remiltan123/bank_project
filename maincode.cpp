@@ -612,32 +612,106 @@ int main()
                 }
                 else if(user_input_2==2)
                 {
-                    
+                    int customerArrayElement;
+                    cout << "ENTER THE CUSTOMER USER NAME : ";
+                    cin >> username;
+                    cout << endl;
+                    password = getPassword();
+                    customerNameArray=bank.customerNameArray;
+                    Customer customer;
+                    for(int i=0; i<customerNameArray.size(); i++)
+                    {
+                        cout<<customerNameArray[i]<<endl;
+                    }
+                    for(int i=0; i<customerNameArray.size(); i++)
+                    {
+                        if(username==customerNameArray[i] && password =="Password@1234")
+                        {
+                            customer=bank.customerArray[i];
+                            customerArrayElement=i;
+                            login_checker=0;
+                            break;
+                        }
+                        login_checker=1;
+                    }
+                    if(login_checker==1)
+                    {
+                        cout<<"LOGIN UNSUCCESSFUL";
+                        login_checker=0;
+                    }
+                    else
+                    {
+                        cout << "SUCCESSFUL LOGIN" << endl<<endl;
+                        int checker_customer=0;
+                        while(checker_customer!=1)
+                        {
+                            cout<<"\nDATE : "<<Admin.get_Date()<<endl;
+                            float annualInterest=Admin.get_annualSavingInterest();
+                            float overdraftCharge=Admin.get_overdraftCharge();
+                            cout<<"ANNUAL INTEREST RATE IS "<<annualInterest<<endl;
+                            cout<<"OVERDRAFT CHARGE IS "<<overdraftCharge<<endl<<endl;
+                            cout<<"ACCOUNT NAME : "<<customer.CustomerName<<endl;
+                            cout<<"ACCOUNT TYPE : "<<customer.accountType<<endl;
+                            cout<<"ACCOUNT CONTACT DETAILS : "<<customer.customerContact<<endl<<endl;
+                            cout<<"ACCOUNT BALANCE : "<<customer.moneyDeposit<<endl<<endl;
+                            cout<<"ACCOUNT OVERDRAFT : "<<customer.overDraftNow<<endl<<endl;
+                            cout<<"1. DEPOSIT MONEY IN ACCOUNT"<<endl;
+                            cout<<"2. WITHDRAW MONEY FROM ACCOUNT"<<endl;
+                            cout<<"3. VIEW TRANSACTIONS"<<endl;
+                            cout<<"4. LOGOUT"<<endl;
+                            cout <<"SELECT AN OPTION ABOVE"<<endl;
+                            cin>>user_input_3;
+                            switch(user_input_3)
+                            {
+                            case 1:
+                            {
+                                if(customer.isClosed==false)
+                                {
+                                    customer.set_Date(Admin);
+                                    customer.deposit_Money_Function(bank,CustomerFile,BankFile);
+                                    bank.customerArray[customerArrayElement]=customer;
+                                }
+                                else
+                                {
+                                    cout<<"ACCOUNT CLOSED ALREADY."<<endl;
+                                }
+                                break;
+                            }
+                            case 2:
+                            {
+                                if(customer.isClosed==false)
+                                {
+                                    customer.set_Date(Admin);
+                                    customer.withdraw_Money(bank,CustomerFile,BankFile);
+                                    bank.customerArray[customerArrayElement]=customer;
+                                }
+                                else
+                                {
+                                    cout<<"ACCOUNT CLOSED ALREADY."<<endl;
+                                }
+                                break;
+                            }
+                            case 3:
+                            {
+                                customer.view_Transaction();
+                                break;
+                            }
+                            case 4:
+                            {
+                                input=0;
+                                checker_customer=1;
+                                break;
+                            }
+                            default:
+                            {}
+                            }
+                        }
+                    }
                 }
 
             }
         }
-        else if(user_input_1==1)
-        {
-            string customerUserName;
-            int isSuccess=0;
-            cout<<"ENTER THE CUSTOMER NAME : ";
-            cin>>customerUserName;
-            for(int i=0; i<bank.customerArray.size(); i++)
-            {
-                if(customerUserName==bank.customerNameArray[i])
-                {
-                    bank.customerArray[i].set_Date(Admin);
-                    depositFromOutside(bank,bank.customerArray[i],CustomerFile,BankFile);
-                    isSuccess=1;
-                    break;
-                }
-            }
-            if(isSuccess==0)
-            {
-                cout<<"TRANSACTION UNSUCCESSFUL"<<endl;
-            }
-        }
+        
     }
     return 0;
 }
