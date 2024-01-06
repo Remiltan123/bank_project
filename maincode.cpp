@@ -463,8 +463,8 @@ void Employee::deposit_Money(Customer& customer,Bank& bank,ofstream& MyFile,ofst
     }
     else
     {
-        cout << "ACCOUNT IS ALREADY CLOSED" << endl;
-    }
+        cout << "ACCOUNT IS ALREADY CLOSED" <<�endl;
+	}
 };
 
 
