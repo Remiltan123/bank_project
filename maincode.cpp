@@ -389,6 +389,255 @@ int main()
         exit(1);
     }
 
-    
+    int input=1,user_input_1, user_input_2,user_input_3;
+    Administrator Admin;
+    Admin.set_Date();
+    string username, password;
+    while(input!=0)
+    {
+        cout << "SELECT AN OPTION BELOW : " << endl;
+        cout << "1. DEPOSIT AS AN OUTSIDE SOURCE." << endl;
+        cout << "2. LOGIN." << endl;
+        cin >> user_input_1;
+        if (user_input_1 == 2)
+        {
+            int login_checker=0;
+            while(login_checker!=1)
+            {
+                cout << "SELECT AN OPTION BELOW : " << endl;
+                cout << "1. ENTER AS ADMINISTRATOR." << endl;
+                cout << "2. ENTER AS CUSTOMER." << endl;
+                cout << "3. ENTER AS EMPLOYEE." << endl;
+                cout<<"4. BANK"<<endl;
+
+                cin >> user_input_2;
+                if (user_input_2 == 1)
+                {
+                    cout << "ENTER THE USER NAME : ";
+                    cin >> username;
+                    cout << endl;
+                    password = getPassword();
+
+                    while (username != "Admin" || password != "Password@1234")
+                    {
+                        cout << "INVALID CREDENTIALS." << endl;
+                        cout << "ENTER THE USER NAME : ";
+                        cin >> username;
+                        cout << endl;
+                        password = getPassword();
+                    }
+                    cout << "SUCCESSFUL LOGIN" << endl<<endl;
+                    int checker_admin=0;
+                    while(checker_admin!=1)
+                    {
+                        cout<<"\nDATE : "<<Admin.get_Date()<<endl;
+                        float annualInterest=Admin.get_annualSavingInterest();
+                        float overdraftCharge=Admin.get_overdraftCharge();
+                        cout<<"ANNUAL INTEREST RATE IS "<<annualInterest<<endl;
+                        cout<<"OVERDRAFT CHARGE IS "<<overdraftCharge<<endl;
+                        cout<<"BANK BALANCE NOW :  "<<bank.bankBalance<<endl<<endl;
+                        // cout<<"Overdraft charge per day is " <<" % "<<end;
+                        cout<<"1. CREATE AN EMPLOYEE"<<endl;
+                        cout<<"2. INCREASE THE DATE"<<endl;
+                        cout<<"3. CHANGE OVERDRAFT CHARGE"<<endl;
+                        cout<<"4. CHANGE ANNUAL SAVINGS INTEREST"<<endl;
+                        cout<<"5. LOGOUT"<<endl;
+                        cout <<"SELECT AN OPTION ABOVE"<<endl;
+                        cin>>user_input_3;
+                        switch(user_input_3)
+                        {
+                        case 1:
+                        {
+                            Admin.create_Employee(bank);
+                            Employee employee;
+                            break;
+                        }
+                        case 2:
+                        {
+                            Admin.increase_Date();
+                            if(bank.customerArray.size()>0)
+                            {
+                                for(int i=0; i<bank.customerArray.size(); i++)
+                                {
+                                    Admin.update_Customer_Interest(bank.customerArray[i],bank,BankFile);
+                                    Admin.update_Customer_Overdraft(bank.customerArray[i]);
+                                }
+                            }
+                            break;
+                        }
+                        case 3:
+                        {
+                            Admin.set_overdraftCharge();
+                            break;
+                        }
+                        case 4:
+                        {
+                            Admin.set_annualSavingInterest();
+                            break;
+                        }
+                        case 5:
+                        {
+                            input=0;
+                            checker_admin=1;
+                            break;
+                        }
+                        default:
+                        {}
+                        }
+                    }
+                }
+                else if(user_input_2==4)
+                {
+                    login_checker=1;
+                    input=1;
+                    break;
+                }
+                else if(user_input_2==3)
+                {
+                    cout << "ENTER THE EMPLOYEE USER NAME : ";
+                    cin >> username;
+                    cout << endl;
+                    password = getPassword();
+                    employeeNameArray=bank.employeeNameArray;
+                    Employee employeeNow;
+                    for(int i=0; i<employeeNameArray.size(); i++)
+                    {
+                        if(username==employeeNameArray[i] && password =="Password@1234")
+                        {
+                            employeeNow=bank.employeeArray[i];
+                            login_checker=0;
+                            break;
+                        }
+                        login_checker=1;
+                    }
+                    if(login_checker==1)
+                    {
+                        cout<<"LOGIN UNSUCCESSFUL";
+                        login_checker=0;
+                    }
+                    else
+                    {
+                        cout << "SUCCESSFUL LOGIN" << endl<<endl;
+                        int checker_employee=0;
+                        while(checker_employee!=1)
+                        {
+                            cout<<"\nDATE : "<<Admin.get_Date()<<endl;
+                            float annualInterest=Admin.get_annualSavingInterest();
+                            float overdraftCharge=Admin.get_overdraftCharge();
+                            cout<<"ANNUAL INTEREST RATE IS "<<annualInterest<<endl;
+                            cout<<"OVERDRAFT CHARGE IS "<<overdraftCharge<<endl;
+                            cout<<"1. CREATE A CUSTOMER ACCOUNT"<<endl;
+                            cout<<"2. CLOSE THE CUSTOMER ACCOUNT"<<endl;
+                            cout<<"3. DEPOSIT MONEY IN ACCOUNT"<<endl;
+                            cout<<"4. WITHDRAW MONEY FROM ACCOUNT"<<endl;
+                            cout<<"5. VIEW TRANSACTIONS"<<endl;
+                            cout<<"6. LOGOUT"<<endl;
+                            cout <<"SELECT AN OPTION ABOVE"<<endl;
+                            cin>>user_input_3;
+                            switch(user_input_3)
+                            {
+                            case 1:
+                            {
+                                Customer customerCreated;
+                                customerCreated.set_Date(Admin);
+                                employeeNow.create_Customer(customerCreated,bank,CustomerFile);
+                                break;
+                            }
+                            case 2:
+                            {
+                                string customerName;
+                                cout<<"ENTER THE NAME OF THE CUSTOMER: ";
+                                cin>>customerName;
+                                for(int i=0; i<bank.customerArray.size(); i++)
+                                {
+                                    if(customerName==bank.customerArray[i].CustomerName)
+                                    {
+                                        bank.customerArray[i].set_Date(Admin);
+                                        employeeNow.close_Customer_Account(bank.customerArray[i],CustomerFile);
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            case 3:
+                            {
+                                string customerName;
+                                cout<<"ENTER THE NAME OF THE CUSTOMER: ";
+                                cin>>customerName;
+                                for(int i=0; i<bank.customerArray.size(); i++)
+                                {
+                                    if(customerName==bank.customerArray[i].CustomerName)
+                                    {
+                                        bank.customerArray[i].set_Date(Admin);
+                                        employeeNow.deposit_Money(bank.customerArray[i],bank,CustomerFile,BankFile);
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            case 4:
+                            {
+                                string customerName;
+                                cout<<"ENTER THE NAME OF THE CUSTOMER: ";
+                                cin>>customerName;
+                                for(int i=0; i<bank.customerArray.size(); i++)
+                                {
+                                    if(customerName==bank.customerArray[i].CustomerName)
+                                    {
+                                        bank.customerArray[i].set_Date(Admin);
+                                        employeeNow.withdraw_Money(bank.customerArray[i],bank,CustomerFile,BankFile);
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            case 5:
+                            {
+                                employeeNow.view_Transactions(bank);
+                                break;
+                            }
+                            case 6:
+                            {
+                                input=0;
+                                checker_employee=1;
+                                break;
+                            }
+                            default:
+                            {}
+                            }
+                        }
+                    }
+
+
+                }
+                else if(user_input_2==2)
+                {
+                    
+                }
+
+            }
+        }
+        else if(user_input_1==1)
+        {
+            string customerUserName;
+            int isSuccess=0;
+            cout<<"ENTER THE CUSTOMER NAME : ";
+            cin>>customerUserName;
+            for(int i=0; i<bank.customerArray.size(); i++)
+            {
+                if(customerUserName==bank.customerNameArray[i])
+                {
+                    bank.customerArray[i].set_Date(Admin);
+                    depositFromOutside(bank,bank.customerArray[i],CustomerFile,BankFile);
+                    isSuccess=1;
+                    break;
+                }
+            }
+            if(isSuccess==0)
+            {
+                cout<<"TRANSACTION UNSUCCESSFUL"<<endl;
+            }
+        }
+    }
     return 0;
 }
