@@ -361,6 +361,7 @@ void Employee::set_Employee_Name(string employeeName)
     this->employeeName = employeeName;
 };
 
+
 void Employee::create_Customer(Customer & customerCreated,Bank& bank,ofstream& MyFile)
 {
     string startLetter="";
@@ -463,19 +464,17 @@ void Employee::deposit_Money(Customer& customer,Bank& bank,ofstream& MyFile,ofst
     }
     else
     {
-        cout << "ACCOUNT IS ALREADY CLOSED" << endl;
-	}
+        cout << "ACCOUNT IS ALREADY CLOSED" << endl;
+    }
 };
 
 void Employee::withdraw_Money(Customer& customer,Bank& bank,ofstream& MyFile,ofstream& BankFile)
 {
     if (customer.isClosed == false)
     {
-        //long account_balance=customer.moneyDeposit;
         long now_withdraw;
         cout << "ENTER THE AMOUNT TO BE WITHDRAWN: ";
         cin >> now_withdraw;
-        //customer.moneyDeposit=account_balance-now_withdraw;
 
         if (customer.isCurrentAccount == false && now_withdraw > customer.moneyDeposit)
         {
