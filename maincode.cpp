@@ -671,7 +671,7 @@ string getPassword()
         cout << '*';
     }
 
-    return password;
+    return password;
 }
 
 
