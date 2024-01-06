@@ -351,7 +351,7 @@ void Customer::withdraw_Money(Bank& bank,ofstream& MyFile,ofstream& BankFile)
 
 };
 
-
+////
 
 
 
@@ -711,7 +711,27 @@ int main()
 
             }
         }
-        
+        else if(user_input_1==1)
+        {
+            string customerUserName;
+            int isSuccess=0;
+            cout<<"ENTER THE CUSTOMER NAME : ";
+            cin>>customerUserName;
+            for(int i=0; i<bank.customerArray.size(); i++)
+            {
+                if(customerUserName==bank.customerNameArray[i])
+                {
+                    bank.customerArray[i].set_Date(Admin);
+                    depositFromOutside(bank,bank.customerArray[i],CustomerFile,BankFile);
+                    isSuccess=1;
+                    break;
+                }
+            }
+            if(isSuccess==0)
+            {
+                cout<<"TRANSACTION UNSUCCESSFUL"<<endl;
+            }
+        }
     }
     return 0;
 }
